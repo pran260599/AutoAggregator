@@ -1,0 +1,1944 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoAggregator - Your Ultimate Car Research Hub</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* CSS Variables for better maintainability and theme management */
+    :root {
+      --primary-blue: #1a365d;
+      /* Darker blue, subtle hint of corporate */
+      --secondary-blue: #2a69ac;
+      /* Medium blue */
+      --tertiary-blue: #4a90e2;
+      /* Lighter blue */
+      --accent-red: #e53e3e;
+      /* Bold red for action */
+      --hover-red: #c53030;
+      --success-green: #38a169;
+      /* Richer green for price/positive */
+      --star-yellow: #f6ad55;
+      /* Warm yellow for stars */
+      --light-bg: #f7fafd;
+      /* Very light, soft background */
+      --mid-gray-light: #edf2f7;
+      /* Borders, subtle backgrounds */
+      --mid-gray-dark: #cbd5e0;
+      /* Deeper gray for placeholders */
+      --dark-gray-text: #2d3748;
+      /* Dark text for headings, strong contrast */
+      --medium-gray-text: #4a5568;
+      /* Body text */
+      --darker-bg: #1a202c;
+      /* Deep dark for footer */
+      --footer-link: #a0aec0;
+      --footer-text: #718096;
+      --white: #ffffff;
+
+      --spacing-xs: 0.5rem;
+      --spacing-sm: 1rem;
+      --spacing-md: 1.5rem;
+      --spacing-lg: 2rem;
+      --spacing-xl: 3rem;
+      --spacing-xxl: 4rem;
+      --spacing-xxxl: 5rem;
+      --spacing-xxxxl: 6rem;
+
+      --border-radius-sm: 0.25rem;
+      --border-radius-md: 0.5rem;
+      --border-radius-lg: 0.75rem;
+      --border-radius-xl: 1.25rem;
+      /* For cards */
+      --border-radius-pill: 9999px;
+      /* Fully rounded */
+
+      --shadow-xs: 0 1px 3px 0 rgba(0, 0, 0, 0.05),
+        0 1px 2px 0 rgba(0, 0, 0, 0.02);
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Roboto", sans-serif;
+      line-height: 1.7;
+      /* Increased for better readability */
+      color: var(--medium-gray-text);
+      background: var(--light-bg);
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Poppins", sans-serif;
+      color: var(--dark-gray-text);
+      line-height: 1.25;
+      letter-spacing: -0.025em;
+      /* Tighter for modern look */
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      outline: none;
+      font-family: inherit;
+      /* Inherit font from body */
+    }
+
+    .container {
+      max-width: 1280px;
+      /* Slightly wider container */
+      margin: 0 auto;
+      padding: 0 var(--spacing-lg);
+      /* Consistent horizontal padding */
+    }
+
+    /* Navigation */
+    .navbar {
+      background: linear-gradient(135deg,
+          var(--primary-blue) 0%,
+          var(--secondary-blue) 100%);
+      color: var(--white);
+      padding: var(--spacing-sm) 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .navbar.scrolled {
+      padding: var(--spacing-xs) 0;
+      background: var(--primary-blue);
+      box-shadow: var(--shadow-md);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--spacing-lg);
+    }
+
+    .logo {
+      font-size: 2rem;
+      /* Larger logo */
+      font-weight: 700;
+      background: linear-gradient(45deg, var(--white), var(--tertiary-blue));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+      letter-spacing: -0.04em;
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: var(--spacing-xl);
+      /* More space between links */
+    }
+
+    .nav-links a {
+      color: var(--white);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--border-radius-md);
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: rgba(255, 255, 255, 0.2);
+      /* More transparent for hover */
+      transform: translateY(-3px);
+      /* More pronounced lift */
+      box-shadow: var(--shadow-xs);
+    }
+
+    .mobile-menu {
+      display: none;
+      /* Hidden on desktop */
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0 var(--spacing-xs);
+    }
+
+    /* Mobile Nav Overlay (Hidden by default) */
+    .mobile-nav-overlay {
+      display: none;
+      /* Controlled by JS */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .mobile-nav-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .mobile-nav-overlay ul {
+      list-style: none;
+      padding: 0;
+      text-align: center;
+    }
+
+    .mobile-nav-overlay ul li {
+      margin: var(--spacing-lg) 0;
+    }
+
+    .mobile-nav-overlay ul li a {
+      color: var(--white);
+      font-size: 1.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: block;
+      padding: var(--spacing-sm);
+      transition: color 0.3s ease;
+    }
+
+    .mobile-nav-overlay ul li a:hover {
+      color: var(--tertiary-blue);
+    }
+
+    .close-menu-btn {
+      position: absolute;
+      top: var(--spacing-lg);
+      right: var(--spacing-lg);
+      color: var(--white);
+      font-size: 2.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg,
+          var(--primary-blue) 0%,
+          var(--secondary-blue) 50%,
+          var(--tertiary-blue) 100%);
+      color: var(--white);
+      padding: var(--spacing-xxxxl) 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff08" points="0,1000 1000,0 1000,1000"/></svg>'),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle fill="%23ffffff04" cx="200" cy="200" r="150"/><circle fill="%23ffffff06" cx="800" cy="700" r="100"/></svg>');
+      /* Added subtle circles */
+      animation: float 6s ease-in-out infinite, rotate 150s linear infinite;
+      /* New animation timing */
+      z-index: 1;
+    }
+
+    @keyframes rotate {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero h1 {
+      font-size: 4.2rem;
+      /* Even larger and more impactful */
+      margin-bottom: var(--spacing-md);
+      font-weight: 700;
+      text-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+      /* Stronger shadow */
+      animation: slideInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+      /* Smoother animation */
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      /* Larger */
+      margin-bottom: var(--spacing-xxxl);
+      opacity: 0.98;
+      /* More opaque */
+      max-width: 800px;
+      /* Wider */
+      margin-left: auto;
+      margin-right: auto;
+      animation: slideInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
+      font-weight: 300;
+    }
+
+    .search-container {
+      animation: slideInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s both;
+    }
+
+    .search-bar {
+      background: var(--white);
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius-pill);
+      display: flex;
+      align-items: center;
+      max-width: 1000px;
+      /* Even wider search bar */
+      margin: 0 auto;
+      box-shadow: var(--shadow-lg);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+      /* Allow wrapping of inputs */
+    }
+
+    .search-bar:hover {
+      transform: translateY(-5px);
+      /* More lift */
+      box-shadow: var(--shadow-xl);
+      /* Stronger shadow */
+    }
+
+    .search-input-group {
+      flex: 1;
+      /* Distribute space */
+      display: flex;
+      align-items: center;
+      background: var(--light-bg);
+      border-radius: var(--border-radius-md);
+      padding: 0.8rem var(--spacing-sm);
+      min-width: 160px;
+      /* Ensure inputs have minimum width */
+      border: 1px solid var(--mid-gray-light);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .search-input-group:focus-within {
+      border-color: var(--secondary-blue);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      /* Stronger focus ring */
+    }
+
+    .search-input-group i {
+      color: var(--medium-gray-text);
+      margin-right: var(--spacing-xs);
+      font-size: 1.15rem;
+      /* Slightly larger icons */
+      flex-shrink: 0;
+    }
+
+    .search-input-group input,
+    .search-input-group select {
+      flex: 1;
+      border: none;
+      background: transparent;
+      font-size: 1.1rem;
+      outline: none;
+      color: var(--dark-gray-text);
+      padding: 0;
+      min-width: 0;
+      /* Allow input to shrink */
+    }
+
+    .search-input-group select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>');
+      background-repeat: no-repeat;
+      background-position: right 0.5rem center;
+      background-size: 1.25rem;
+      padding-right: 2rem;
+      /* Space for arrow */
+    }
+
+    .search-btn {
+      background: linear-gradient(135deg,
+          var(--accent-red) 0%,
+          var(--hover-red) 100%);
+      color: var(--white);
+      border: none;
+      padding: 1.1rem 3rem;
+      /* More generous padding */
+      border-radius: var(--border-radius-pill);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      font-size: 1.2rem;
+      /* Larger font */
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-btn:hover {
+      background: linear-gradient(135deg,
+          var(--hover-red) 0%,
+          var(--accent-red) 100%);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Quick Filters */
+    .quick-filters {
+      margin-top: var(--spacing-lg);
+      display: flex;
+      gap: var(--spacing-sm);
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: slideInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.9s both;
+    }
+
+    .filter-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      /* Thicker, more visible border */
+      padding: 0.7rem 1.4rem;
+      /* More padding */
+      border-radius: var(--border-radius-pill);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+      /* Stronger blur effect */
+      font-weight: 500;
+      font-size: 1rem;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: rgba(255, 255, 255, 0.3);
+      /* More distinct hover */
+      border-color: rgba(255, 255, 255, 0.7);
+      transform: translateY(-4px);
+      /* More pronounced lift */
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Section General Styling */
+    section {
+      padding: var(--spacing-xxxxl) 0;
+      position: relative;
+      /* For relative positioning of backgrounds/elements */
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 3.2rem;
+      /* Larger */
+      color: var(--dark-gray-text);
+      margin-bottom: var(--spacing-xxxl);
+      /* More space below headings */
+      position: relative;
+      font-weight: 700;
+    }
+
+    h2::after {
+      content: "";
+      position: absolute;
+      bottom: -1.5rem;
+      /* Adjust line position using rem */
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      /* Wider line */
+      height: 6px;
+      /* Thicker line */
+      background: linear-gradient(135deg,
+          var(--accent-red),
+          var(--hover-red));
+      border-radius: var(--border-radius-sm);
+    }
+
+    /* Features Section */
+    .features {
+      background: var(--white);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--spacing-xl);
+      /* More space between cards */
+    }
+
+    .feature-card {
+      background: linear-gradient(145deg, var(--light-bg), var(--white));
+      padding: var(--spacing-xxl);
+      /* More internal padding */
+      border-radius: var(--border-radius-xl);
+      text-align: center;
+      border: 1px solid var(--mid-gray-light);
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      /* Smoother animation */
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      /* Flex for content alignment */
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      /* Align content to top */
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg,
+          transparent,
+          rgba(255, 255, 255, 0.5),
+          transparent);
+      /* Stronger shine */
+      transition: left 0.6s ease-out;
+      z-index: 1;
+    }
+
+    .feature-card:hover::before {
+      left: 100%;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-15px);
+      box-shadow: var(--shadow-lg);
+      /* Stronger shadow */
+      border-color: var(--secondary-blue);
+    }
+
+    .feature-icon {
+      width: 80px;
+      /* Larger icon container */
+      height: 80px;
+      background: linear-gradient(135deg,
+          var(--primary-blue),
+          var(--secondary-blue));
+      border-radius: 50%;
+      margin: 0 auto var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      /* Larger font */
+      color: var(--white);
+      transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+
+    .feature-card:hover .feature-icon {
+      transform: scale(1.15) rotate(8deg);
+    }
+
+    .feature-card h3 {
+      font-size: 1.8rem;
+      /* Larger heading */
+      margin-bottom: var(--spacing-sm);
+      font-weight: 600;
+    }
+
+    .feature-card p {
+      color: var(--medium-gray-text);
+      line-height: 1.7;
+      font-weight: 300;
+      flex-grow: 1;
+      /* Allow paragraph to take up remaining space */
+    }
+
+    /* How It Works Section */
+    .how-it-works {
+      background: linear-gradient(135deg,
+          var(--secondary-blue) 0%,
+          var(--tertiary-blue) 100%);
+      color: var(--white);
+      padding: var(--spacing-xxxxl) 0;
+    }
+
+    .how-it-works h2 {
+      color: var(--white);
+      margin-bottom: var(--spacing-xxxl);
+    }
+
+    .how-it-works h2::after {
+      background: linear-gradient(135deg,
+          var(--white),
+          rgba(255, 255, 255, 0.7));
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-xxl);
+      /* More gap */
+      text-align: center;
+    }
+
+    .step-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--spacing-md);
+    }
+
+    .step-icon {
+      width: 100px;
+      /* Larger icon */
+      height: 100px;
+      background: rgba(255, 255, 255, 0.18);
+      /* Slightly more opaque */
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      /* Larger font */
+      color: var(--white);
+      margin-bottom: var(--spacing-lg);
+      border: 3px solid rgba(255, 255, 255, 0.4);
+      /* Thicker border */
+      box-shadow: var(--shadow-md);
+      transition: transform 0.3s ease;
+    }
+
+    .step-card:hover .step-icon {
+      transform: scale(1.05);
+    }
+
+    .step-card h3 {
+      font-size: 2rem;
+      /* Larger heading */
+      color: var(--white);
+      margin-bottom: var(--spacing-sm);
+      font-weight: 600;
+    }
+
+    .step-card p {
+      font-size: 1.1rem;
+      /* Slightly larger */
+      color: rgba(255, 255, 255, 0.95);
+      /* More opaque */
+      line-height: 1.7;
+      font-weight: 300;
+      max-width: 350px;
+    }
+
+    /* Weekly AI Pick Section */
+    .ai-pick-section {
+      background: linear-gradient(135deg,
+          var(--dark-gray-text) 0%,
+          #303f57 100%);
+      /* Darker, more premium gradient */
+      color: var(--white);
+      padding: var(--spacing-xxxxl) 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-pick-section::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff06" points="1000,0 0,1000 0,0"/><circle fill="%23ffffff04" cx="100" cy="800" r="120"/><circle fill="%23ffffff05" cx="900" cy="150" r="80"/></svg>');
+      /* More complex pattern */
+      animation: float 8s ease-in-out infinite reverse,
+        rotate 150s linear infinite;
+      /* New animation timing */
+      z-index: 1;
+    }
+
+    .ai-pick-section h2 {
+      font-size: 3.5rem;
+      /* Larger */
+      margin-bottom: var(--spacing-xxxl);
+      color: var(--white);
+      font-weight: 700;
+      position: relative;
+      z-index: 2;
+    }
+
+    .ai-pick-section h2::after {
+      background: linear-gradient(135deg,
+          var(--white),
+          rgba(255, 255, 255, 0.7));
+    }
+
+    .ai-pick-card {
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: var(--border-radius-xl);
+      max-width: 1000px;
+      /* Wider card */
+      margin: 0 auto;
+      box-shadow: var(--shadow-xl);
+      /* Stronger shadow */
+      padding: var(--spacing-xl);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      transition: transform 0.3s ease;
+    }
+
+    .ai-pick-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .ai-pick-image {
+      width: 100%;
+      max-width: 500px;
+      /* Adjust as needed */
+      height: 300px;
+      /* Taller */
+      background: linear-gradient(45deg,
+          var(--mid-gray-light),
+          var(--mid-gray-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--medium-gray-text);
+      border-radius: var(--border-radius-lg);
+      margin-bottom: var(--spacing-lg);
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .ai-pick-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .ai-pick-card:hover .ai-pick-image img {
+      transform: scale(1.05);
+    }
+
+    .ai-pick-content {
+      padding: var(--spacing-md);
+      color: var(--dark-gray-text);
+    }
+
+    .ai-pick-content h3 {
+      font-size: 2.5rem;
+      /* Larger title */
+      margin-bottom: var(--spacing-sm);
+      color: var(--primary-blue);
+      font-weight: 700;
+    }
+
+    .ai-pick-content p {
+      font-size: 1.25rem;
+      /* Larger */
+      margin-bottom: var(--spacing-lg);
+      line-height: 1.8;
+      /* More comfortable line height */
+      color: var(--dark-gray-text);
+      font-weight: 400;
+    }
+
+    .ai-pick-btn {
+      background: var(--accent-red);
+      color: var(--white);
+      border: none;
+      padding: 1rem 2.8rem;
+      border-radius: var(--border-radius-md);
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+      font-size: 1.15rem;
+      display: inline-block;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ai-pick-btn:hover {
+      background: var(--hover-red);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Featured Cars Section (now for general top-rated) */
+    .featured-cars {
+      background: linear-gradient(135deg,
+          var(--light-bg) 0%,
+          var(--mid-gray-light) 100%);
+    }
+
+    .car-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--spacing-xl);
+    }
+
+    .car-card {
+      background: var(--white);
+      border-radius: var(--border-radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      position: relative;
+      display: flex;
+      /* Flex for content alignment */
+      flex-direction: column;
+    }
+
+    .car-card:hover {
+      transform: translateY(-15px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .car-image-wrapper {
+      height: 250px;
+      /* Taller image */
+      background: linear-gradient(135deg,
+          var(--mid-gray-light),
+          var(--mid-gray-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--medium-gray-text);
+      border-radius: var(--border-radius-lg);
+      margin-bottom: var(--spacing-lg);
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-md);
+    }
+
+    .car-image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .car-card:hover .car-image-wrapper img {
+      transform: scale(1.05);
+    }
+
+    .car-info {
+      padding: var(--spacing-lg);
+      flex-grow: 1;
+      /* Allow info section to grow */
+      display: flex;
+      flex-direction: column;
+    }
+
+    .car-title {
+      font-size: 1.55rem;
+      font-weight: 700;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .car-price {
+      font-size: 1.35rem;
+      color: var(--success-green);
+      font-weight: 700;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .car-rating {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .stars {
+      color: var(--star-yellow);
+      font-size: 1.2rem;
+      /* Larger stars */
+    }
+
+    .rating-text {
+      color: var(--medium-gray-text);
+      font-size: 1rem;
+      font-weight: 300;
+    }
+
+    .car-features {
+      font-size: 1rem;
+      color: var(--medium-gray-text);
+      margin-bottom: var(--spacing-sm);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .ai-insight-card {
+      background: var(--light-bg);
+      border-left: 5px solid var(--secondary-blue);
+      /* Thicker border */
+      padding: var(--spacing-sm) var(--spacing-md);
+      margin-top: var(--spacing-sm);
+      margin-bottom: var(--spacing-md);
+      border-radius: var(--border-radius-sm);
+      font-size: 0.95rem;
+      /* Slightly larger */
+      line-height: 1.6;
+      color: var(--dark-gray-text);
+      font-style: italic;
+      box-shadow: var(--shadow-xs);
+      /* Subtle shadow */
+    }
+
+    .ai-insight-card strong {
+      color: var(--primary-blue);
+      font-weight: 600;
+    }
+
+    .ai-cons {
+      font-size: 0.95rem;
+      /* Match .car-features or .ai-insight-card font size */
+      line-height: 1.6;
+      color: var(--medium-gray-text);
+      /* Default color */
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .ai-cons strong {
+      color: var(--accent-red);
+      /* Make 'Cons:' text red */
+      font-weight: 600;
+    }
+
+    .ai-pros-display,
+    .ai-cons-display {
+      font-size: 1rem;
+      /* Adjust as needed */
+      line-height: 1.5;
+      text-align: left;
+      /* Align text within the card */
+      padding: 0 var(--spacing-sm);
+      /* Some horizontal padding */
+      margin: var(--spacing-sm) 0;
+      /* Vertical spacing */
+    }
+
+    .ai-pros-display strong {
+      color: var(--success-green);
+    }
+
+    .ai-cons-display strong {
+      color: var(--accent-red);
+    }
+
+    .view-details-btn {
+      margin-top: auto;
+      /* Push button to bottom */
+      background: linear-gradient(135deg,
+          var(--primary-blue),
+          var(--secondary-blue));
+      color: var(--white);
+      border: none;
+      padding: 1rem 2rem;
+      /* More padding */
+      border-radius: var(--border-radius-lg);
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+      font-size: 1.05rem;
+      display: inline-block;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .view-details-btn:hover {
+      background: linear-gradient(135deg,
+          var(--secondary-blue),
+          var(--primary-blue));
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Testimonials Section */
+    .testimonials {
+      background: var(--white);
+      padding: var(--spacing-xxxxl) 0;
+      text-align: center;
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--spacing-xl);
+    }
+
+    .testimonial-card {
+      background: var(--light-bg);
+      padding: var(--spacing-xl);
+      border-radius: var(--border-radius-xl);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--mid-gray-light);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .testimonial-card p {
+      font-size: 1.15rem;
+      /* Larger */
+      line-height: 1.8;
+      margin-bottom: var(--spacing-md);
+      font-style: italic;
+      color: var(--dark-gray-text);
+      position: relative;
+      z-index: 1;
+    }
+
+    .testimonial-card p::before {
+      content: "“";
+      /* Fancy quotes */
+      font-family: serif;
+      font-size: 4em;
+      color: rgba(0, 0, 0, 0.05);
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      line-height: 1;
+      z-index: 0;
+    }
+
+    .testimonial-author {
+      font-weight: 700;
+      color: var(--primary-blue);
+      font-size: 1.1rem;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .testimonial-source {
+      font-size: 0.95rem;
+      color: var(--medium-gray-text);
+      font-weight: 400;
+    }
+
+    /* CTA Section */
+    .cta {
+      background: linear-gradient(135deg,
+          var(--accent-red) 0%,
+          var(--hover-red) 50%,
+          #f87171 100%);
+      color: var(--white);
+      padding: var(--spacing-xxxxl) 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: repeating-linear-gradient(45deg,
+          transparent,
+          transparent 15px,
+          /* Thicker lines */
+          rgba(255, 255, 255, 0.04) 15px,
+          rgba(255, 255, 255, 0.04) 30px);
+      animation: slide 30s linear infinite;
+      /* Slower animation */
+      z-index: 1;
+    }
+
+    @keyframes slide {
+      0% {
+        transform: translateX(-70px) translateY(-70px);
+      }
+
+      100% {
+        transform: translateX(0px) translateY(0px);
+      }
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .cta h2 {
+      font-size: 3.5rem;
+      margin-bottom: var(--spacing-md);
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .cta p {
+      font-size: 1.4rem;
+      margin-bottom: var(--spacing-xxxl);
+      opacity: 0.98;
+      font-weight: 300;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-btn {
+      background: var(--white);
+      color: var(--accent-red);
+      border: none;
+      padding: 1.25rem 3.5rem;
+      /* More padding */
+      border-radius: var(--border-radius-xl);
+      /* Rounded more */
+      font-size: 1.3rem;
+      /* Larger */
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: var(--shadow-md);
+      display: inline-block;
+      text-align: center;
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-5px);
+      /* More pronounced lift */
+      box-shadow: var(--shadow-lg);
+      /* Stronger shadow on hover */
+      background: var(--light-bg);
+      /* Slight color change on hover */
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--darker-bg);
+      color: var(--footer-text);
+      padding: var(--spacing-xxxl) 0 var(--spacing-lg);
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,
+          minmax(220px, 1fr));
+      /* Adjusted min-width for columns */
+      gap: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .footer-section h3 {
+      font-size: 1.5rem;
+      /* Larger */
+      margin-bottom: var(--spacing-md);
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .footer-section a {
+      color: var(--footer-link);
+      text-decoration: none;
+      display: block;
+      margin-bottom: var(--spacing-xs);
+      transition: all 0.3s ease;
+      padding: 0.2rem 0;
+      font-size: 1rem;
+      /* Slightly larger */
+      font-weight: 300;
+    }
+
+    .footer-section a:hover {
+      color: var(--secondary-blue);
+      transform: translateX(8px);
+      /* More noticeable slide */
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: var(--spacing-lg);
+      border-top: 1px solid #3d4653;
+      /* Darker border */
+      color: var(--footer-text);
+      font-size: 0.95rem;
+      /* Slightly larger */
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: none;
+      text-align: center;
+      color: var(--medium-gray-text);
+      font-size: 1.1rem;
+      margin: var(--spacing-xxl) 0;
+      font-weight: 500;
+      flex-direction: column;
+      /* Spinner above text */
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loading.show {
+      display: flex;
+    }
+
+    .spinner {
+      border: 4px solid var(--mid-gray-light);
+      border-top: 4px solid var(--secondary-blue);
+      border-radius: 50%;
+      width: 40px;
+      /* Larger spinner */
+      height: 40px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-bottom: var(--spacing-sm);
+      /* Space between spinner and text */
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Back to Top Button */
+    #backToTopBtn {
+      display: none;
+      /* Hidden by default */
+      position: fixed;
+      bottom: var(--spacing-lg);
+      right: var(--spacing-lg);
+      z-index: 99;
+      font-size: 1.5rem;
+      background-color: var(--primary-blue);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+    }
+
+    #backToTopBtn:hover {
+      background-color: var(--secondary-blue);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Responsive Design */
+    @media (min-width: 1025px) {
+
+      /* Larger desktop adjustments */
+      .search-input-group {
+        flex: 1 1 20%;
+        /* Distribute 4 inputs more evenly */
+      }
+
+      .search-btn {
+        flex-basis: auto;
+        /* Don't force full width */
+      }
+
+      .search-bar {
+        flex-wrap: nowrap;
+        /* Prevent wrapping on large screens */
+      }
+    }
+
+    @media (max-width: 900px) {
+
+      /* Tablet and smaller desktop */
+      .search-bar {
+        gap: var(--spacing-md);
+        /* More gap for wrapped inputs */
+      }
+
+      .search-input-group {
+        flex-basis: calc(50% - var(--spacing-md) / 2);
+        /* Two inputs per row */
+      }
+
+      .search-btn {
+        flex-basis: 100%;
+        /* Button takes full width */
+      }
+
+      .hero h1 {
+        font-size: 3.2rem;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+      }
+
+      h2 {
+        font-size: 2.8rem;
+      }
+
+      .feature-grid,
+      .car-grid,
+      .steps-grid,
+      .testimonial-grid {
+        gap: var(--spacing-lg);
+        /* Reduce gap on smaller screens */
+      }
+    }
+
+    @media (max-width: 768px) {
+
+      /* Mobile */
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: block;
+        /* Show hamburger icon */
+      }
+
+      .hero h1 {
+        font-size: 2.8rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+        padding: 0 var(--spacing-sm);
+      }
+
+      .search-bar {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        margin: 0 var(--spacing-sm);
+        padding: var(--spacing-lg);
+        border-radius: var(--border-radius-md);
+        /* Less rounded on mobile */
+        box-shadow: var(--shadow-xl);
+        /* Maintain strong shadow */
+      }
+
+      .search-input-group {
+        width: 100%;
+        flex-basis: auto;
+        /* Reset flex basis */
+      }
+
+      .search-btn {
+        width: 100%;
+        border-radius: var(--border-radius-md);
+        padding: 1.2rem;
+      }
+
+      .quick-filters {
+        margin: var(--spacing-lg) var(--spacing-sm) 0;
+      }
+
+      h2 {
+        font-size: 2.4rem;
+      }
+
+      .feature-grid,
+      .car-grid,
+      .steps-grid,
+      .testimonial-grid {
+        grid-template-columns: 1fr;
+        padding: 0 var(--spacing-sm);
+      }
+
+      .cta h2 {
+        font-size: 2.6rem;
+      }
+
+      .cta p {
+        font-size: 1.2rem;
+        padding: 0 var(--spacing-sm);
+      }
+
+      .ai-pick-card {
+        padding: var(--spacing-lg) var(--spacing-md);
+        border-radius: var(--border-radius-lg);
+      }
+
+      .ai-pick-content h3 {
+        font-size: 2rem;
+      }
+
+      .ai-pick-image {
+        height: 200px;
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      /* Smaller mobile devices */
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      h2 {
+        font-size: 2rem;
+      }
+
+      .logo {
+        font-size: 1.6rem;
+      }
+
+      .mobile-menu {
+        font-size: 1.8rem;
+      }
+
+      .feature-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+      }
+
+      .feature-card h3 {
+        font-size: 1.4rem;
+      }
+
+      .ai-pick-content h3 {
+        font-size: 1.6rem;
+      }
+
+      .car-title {
+        font-size: 1.3rem;
+      }
+
+      .car-price {
+        font-size: 1.15rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar" id="mainNavbar" aria-label="Main navigation">
+    <div class="nav-container">
+      <a href="#home" class="logo" aria-label="AutoAggregator Home">AutoAggregator</a>
+      <ul class="nav-links" role="menubar">
+        <li role="none">
+          <a href="#home" role="menuitem" class="active">Home</a>
+        </li>
+        <li role="none">
+          <a href="#search-section" role="menuitem">Search Cars</a>
+        </li>
+        <li role="none">
+          <a href="#how-it-works" role="menuitem">How It Works</a>
+        </li>
+        <li role="none">
+          <a href="#ai-pick-section" role="menuitem">AI Pick</a>
+        </li>
+        <li role="none">
+          <a href="#personalized-recommendations-section" role="menuitem">Recommended For You</a>
+        </li>
+        <li role="none">
+          <a href="#featured-cars-section" role="menuitem">Top Cars</a>
+        </li>
+        <li role="none">
+          <a href="#testimonials-section" role="menuitem">Testimonials</a>
+        </li>
+        <li role="none" id="profileLink">
+          <a href="{% url 'user_profile' %}" role="menuitem">Profile</a>
+        </li>
+        <li role="none" id="userDisplayLink" style="display: none;"> <a href="#" role="menuitem"></a>
+        </li>
+        <li role="none" id="logoutBtn" style="display: none;"> <a href="#" role="menuitem">Logout</a>
+        </li>
+      </ul>
+      <button class="mobile-menu" id="mobileMenuBtn" aria-label="Open mobile menu" aria-expanded="false"
+        aria-controls="mobileNavOverlay">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-nav-overlay" id="mobileNavOverlay" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
+    <button class="close-menu-btn" id="closeMobileMenuBtn" aria-label="Close mobile menu">
+      <i class="fas fa-times"></i>
+    </button>
+    <ul>
+      <li><a href="#home" class="mobile-nav-link">Home</a></li>
+      <li>
+        <a href="#search-section" class="mobile-nav-link">Search Cars</a>
+      </li>
+      <li>
+        <a href="#how-it-works" class="mobile-nav-link">How It Works</a>
+      </li>
+      <li><a href="#ai-pick-section" class="mobile-nav-link">AI Pick</a></li>
+      <li>
+        <a href="#personalized-recommendations-section" class="mobile-nav-link">Recommended For You</a>
+      </li>
+      <li>
+        <a href="#featured-cars-section" class="mobile-nav-link">Top Cars</a>
+      </li>
+      <li>
+        <a href="#testimonials-section" class="mobile-nav-link">Testimonials</a>
+      </li>
+      <li><a href="#footer" class="mobile-nav-link">Contact</a></li>
+    </ul>
+  </div>
+
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-content">
+        <h1>Find Your Perfect Car</h1>
+        <p>
+          Compare reviews from every major source. Get AI-powered
+          recommendations. Make informed decisions with comprehensive
+          insights.
+        </p>
+        <div class="search-container" id="search-section">
+          <div class="search-bar">
+            <div class="search-input-group">
+              <i class="fas fa-car"></i>
+              <input type="text" class="search-input" id="searchMake" placeholder="Make (e.g., Toyota)"
+                aria-label="Car make" />
+            </div>
+            <div class="search-input-group">
+              <i class="fas fa-tag"></i>
+              <input type="text" class="search-input" id="searchModel" placeholder="Model (e.g., Camry)"
+                aria-label="Car model" />
+            </div>
+            <div class="search-input-group">
+              <i class="fas fa-calendar-alt"></i>
+              <select class="search-input" id="searchYear" aria-label="Car year">
+                <option value="">Year</option>
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
+                <option value="2020">2020</option>
+              </select>
+            </div>
+            <div class="search-input-group">
+              <i class="fas fa-dollar-sign"></i>
+              <input type="range" class="search-input slider" id="searchPriceRange" min="0" max="100000" step="5000"
+                value="100000" aria-label="Max price range" />
+              <span id="priceValue">$100,000+</span>
+            </div>
+            <button class="search-btn" onclick="performSearch()">
+              Search Cars <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+          <div class="quick-filters">
+            <button class="filter-btn" data-filter="sedan">Sedan</button>
+            <button class="filter-btn" data-filter="suv">SUV</button>
+            <button class="filter-btn" data-filter="truck">Truck</button>
+            <button class="filter-btn" data-filter="electric">Electric</button>
+            <button class="filter-btn" data-filter="hybrid">Hybrid</button>
+            <button class="filter-btn" data-filter="luxury">Luxury</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="container">
+      <h2>Why Choose AutoAggregator?</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-search-plus" aria-hidden="true"></i>
+          </div>
+          <h3>Comprehensive Reviews</h3>
+          <p>
+            We aggregate reviews from Edmunds, Consumer Reports, Motor Trend,
+            and 20+ other trusted sources to give you the complete picture.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-robot" aria-hidden="true"></i>
+          </div>
+          <h3>AI-Powered Insights</h3>
+          <p>
+            Our advanced AI analyzes thousands of reviews to provide
+            personalized recommendations tailored to your specific needs and
+            preferences.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i class="fas fa-chart-line" aria-hidden="true"></i>
+          </div>
+          <h3>Real-Time Market Data</h3>
+          <p>
+            Get the latest pricing, availability, and market trends updated
+            daily with new car releases and dynamic changes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <h2>How It Works</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-icon">1</div>
+          <h3>Explore & Search</h3>
+          <p>
+            Browse our extensive database or use smart filters to find cars
+            that interest you.
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">2</div>
+          <h3>Get AI Insights</h3>
+          <p>
+            Our powerful AI synthesizes reviews, extracting key pros, cons,
+            and sentiments from across the web.
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="step-icon">3</div>
+          <h3>Make Informed Decisions</h3>
+          <p>
+            Receive clear, unbiased comparisons and weekly recommendations to
+            choose your perfect car.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ai-pick-section" id="ai-pick-section">
+    <div class="container">
+      <h2>Our AI's Top Pick This Week</h2>
+      <div class="ai-pick-card">
+        <div class="ai-pick-image">
+          <img src="https://picsum.photos/400/300?random=106" alt="2024 Mazda CX-5 - AI Pick" />
+        </div>
+        <div class="ai-pick-content">
+          <h3>2024 Mazda CX-5</h3>
+          <p>
+            Our AI recommends the Ioniq 7 for its **outstanding interior
+            comfort** and **groundbreaking battery range**, highly praised by
+            early reviewers. It sets a new standard for family EVs,
+            outperforming competitors in charging speed and smart tech
+            integration. This car excels in providing a spacious, tech-forward
+            experience perfect for modern families.
+          </p>
+          <a href="#" class="ai-pick-btn">View AI Analysis & Reviews <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="personalized-recommendations" id="personalized-recommendations-section">
+    <div class="container">
+      <h2 id="personalizedRecTitle">Recommended For You!</h2>
+      <p class="section-description"
+        style="text-align: center; max-width: 700px; margin: -1rem auto 3rem auto; font-size: 1.1rem; color: var(--medium-gray-text);">
+        Based on your recent activity and preferences. <a href="#" id="loginPromptToggle"
+          style="color: var(--secondary-blue); text-decoration: underline;">Log in to see your personalized picks.</a>
+      </p>
+
+      <div class="loading" id="loadingPersonalizedCars">
+        <div class="spinner"></div>
+        Fetching personalized recommendations...
+      </div>
+      <div class="car-grid" id="personalizedCarGrid">
+      </div>
+    </div>
+  </section>
+
+  <section class="featured-cars" id="featured-cars-section">
+    <div class="container">
+      <h2>Explore Top-Rated Cars</h2>
+      <div class="loading" id="loadingCars">
+        <div class="spinner"></div>
+        Fetching car data...
+      </div>
+      <div class="car-grid" id="carGrid"></div>
+    </div>
+  </section>
+
+  <section class="testimonials" id="testimonials-section">
+    <div class="container">
+      <h2>What Our Users Say</h2>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <p>
+            "AutoAggregator cut my research time in half! The AI insights were
+            spot on and helped me choose the perfect SUV for my family."
+          </p>
+          <div class="testimonial-author">- Sarah L.</div>
+          <div class="testimonial-source">Verified Buyer</div>
+        </div>
+        <div class="testimonial-card">
+          <p>
+            "Finally, all the car reviews in one place, summarized by AI! This
+            is a game-changer for anyone buying a new car. Truly invaluable."
+          </p>
+          <div class="testimonial-author">- Mark R.</div>
+          <div class="testimonial-source">Car Enthusiast</div>
+        </div>
+        <div class="testimonial-card">
+          <p>
+            "The weekly recommendations are my new favorite feature. It's like
+            having a personal car expert guiding me through new releases and
+            comparisons."
+          </p>
+          <div class="testimonial-author">- Jessica P.</div>
+          <div class="testimonial-source">First-time Buyer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Find Your Next Car?</h2>
+        <p>
+          Join thousands of smart car buyers who trust AutoAggregator for
+          their research. Get the consolidated insights you need, fast.
+        </p>
+        <a href="#search-section" class="cta-btn">Start Your Search Now <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>AutoAggregator</h3>
+          <a href="#about-section">About Us</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#contact-section">Contact</a>
+          <a href="#blog-section">Blog</a>
+        </div>
+        <div class="footer-section">
+          <h3>Car Research</h3>
+          <a href="#search-section">Search Cars</a>
+          <a href="#compare-section">Compare Cars</a>
+          <a href="#reviews-section">Car Reviews</a>
+          <a href="#buying-guide-section">Buying Guide</a>
+        </div>
+        <div class="footer-section">
+          <h3>Resources</h3>
+          <a href="#news-section">Car News</a>
+          <a href="#safety-section">Safety Ratings</a>
+          <a href="#reliability-section">Reliability Reports</a>
+          <a href="#pricing-section">Pricing Trends</a>
+        </div>
+        <div class="footer-section">
+          <h3>Support</h3>
+          <a href="#help-section">Help Center</a>
+          <a href="#privacy-section">Privacy Policy</a>
+          <a href="#terms-section">Terms of Service</a>
+          <a href="#feedback-section">Feedback</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 AutoAggregator. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <button id="backToTopBtn" title="Go to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <div class="auth-modal-overlay" id="authModalOverlay">
+    <div class="auth-modal-content">
+      <button class="close-modal-btn" id="closeAuthModalBtn">&times;</button>
+
+      <div id="loginSection" class="auth-section active">
+        <h3>Login to Your Account</h3>
+        <form id="loginForm">
+          <input type="text" id="loginUsername" placeholder="Username" required>
+          <input type="password" id="loginPassword" placeholder="Password" required>
+          <button type="submit" id="loginSubmitBtn" class="cta-btn">Login</button>
+          <p class="auth-status" id="loginAuthStatus"></p>
+          <p class="auth-toggle">Don't have an account? <a href="#" id="authToggleLink">Register here.</a></p>
+        </form>
+      </div>
+
+      <div id="registerSection" class="auth-section">
+        <h3>Create New Account</h3>
+        <form id="registerForm">
+          <input type="text" id="registerUsernameInput" placeholder="Username" required>
+          <input type="email" id="registerEmailInput" placeholder="Email" required>
+          <input type="password" id="registerPasswordInput" placeholder="Password" required>
+          <input type="password" id="registerConfirmPasswordInput" placeholder="Confirm Password" required>
+          <button type="submit" id="registerSubmitBtn" class="cta-btn">Register</button>
+          <p class="auth-status" id="registerAuthStatus"></p>
+          <p class="auth-toggle">Already have an account? <a href="#" id="authToggleLink">Login here.</a></p>
+        </form>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <section class="testimonials" id="testimonials-section">
+    <div class="container">
+      <h2>What Our Users Say</h2>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <p>"AutoAggregator cut my research time in half! The AI insights were spot on and helped me choose the perfect
+            SUV for my family."</p>
+          <div class="testimonial-author">- Sarah L.</div>
+          <div class="testimonial-source">Verified Buyer</div>
+        </div>
+        <div class="testimonial-card">
+          <p>"Finally, all the car reviews in one place, summarized by AI! This is a game-changer for anyone buying a
+            new car. Truly invaluable."</p>
+          <div class="testimonial-author">- Mark R.</div>
+          <div class="testimonial-source">Car Enthusiast</div>
+        </div>
+        <div class="testimonial-card">
+          <p>"The weekly recommendations are my new favorite feature. It's like having a personal car expert guiding me
+            through new releases and comparisons."</p>
+          <div class="testimonial-author">- Jessica P.</div>
+          <div class="testimonial-source">First-time Buyer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>Ready to Find Your Next Car?</h2>
+        <p>Join thousands of smart car buyers who trust AutoAggregator for their research. Get the consolidated insights
+          you need, fast.</p>
+        <a href="#search-section" class="cta-btn">Start Your Search Now <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>AutoAggregator</h3>
+          <a href="#about-section">About Us</a>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#contact-section">Contact</a>
+          <a href="#blog-section">Blog</a>
+        </div>
+        <div class="footer-section">
+          <h3>Car Research</h3>
+          <a href="#search-section">Search Cars</a>
+          <a href="#compare-section">Compare Cars</a>
+          <a href="#reviews-section">Car Reviews</a>
+          <a href="#buying-guide-section">Buying Guide</a>
+        </div>
+        <div class="footer-section">
+          <h3>Resources</h3>
+          <a href="#news-section">Car News</a>
+          <a href="#safety-section">Safety Ratings</a>
+          <a href="#reliability-section">Reliability Reports</a>
+          <a href="#pricing-section">Pricing Trends</a>
+        </div>
+        <div class="footer-section">
+          <h3>Support</h3>
+          <a href="#help-section">Help Center</a>
+          <a href="#privacy-section">Privacy Policy</a>
+          <a href="#terms-section">Terms of Service</a>
+          <a href="#feedback-section">Feedback</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 AutoAggregator. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <button id="backToTopBtn" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

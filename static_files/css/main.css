@@ -1,0 +1,30 @@
+/* AutoAggregator/static_files/css/main.css */
+
+/* Copy content from your homepage.html's <style> block here */
+/* Example: */
+:root {
+    --primary-blue: #1a365d;
+    --secondary-blue: #2a69ac;
+    /* ... other CSS variables ... */
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.7;
+    color: #333;
+    background: #f8fafc;
+    scroll-behavior: smooth;
+}
+
+/* Add other global styles from your homepage.html <style> block */
+/* Example: */
+.navbar {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    color: white;
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+}
+/* ... and so on for other common styles ... */

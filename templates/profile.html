@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - AutoAggregator</title>
+    <!-- Link your existing CSS (from homepage.html) here -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"> <!-- Assuming you will create a main.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Add some basic styling for profile page if desired */
+        body { font-family: 'Roboto', sans-serif; background-color: var(--light-bg); color: var(--medium-gray-text); }
+        .container { max-width: 1280px; margin: 0 auto; padding: 2rem; }
+        .profile-header { text-align: center; margin-bottom: 2rem; }
+        .profile-section { background: var(--white); padding: 1.5rem; border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm); margin-bottom: 1.5rem; }
+        .profile-section h3 { color: var(--primary-blue); margin-bottom: 1rem; }
+        .profile-section ul { list-style: none; padding: 0; }
+        .profile-section ul li { padding: 0.5rem 0; border-bottom: 1px solid var(--mid-gray-light); }
+        .profile-section ul li:last-child { border-bottom: none; }
+        .loading { text-align: center; padding: 2rem; }
+        .spinner { border: 4px solid var(--mid-gray-light); border-top: 4px solid var(--secondary-blue); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; margin-right: 10px;}
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body id="user-profile-page"> <!-- ADD THIS ID -->
+    <nav class="navbar" id="mainNavbar">
+        <div class="nav-container">
+            <a href="{% url 'homepage' %}" class="logo">AutoAggregator</a>
+            <ul class="nav-links">
+                <li><a href="{% url 'homepage' %}#home">Home</a></li>
+                <li><a href="{% url 'homepage' %}#search-section">Search Cars</a></li>
+                <li><a href="{% url 'homepage' %}#personalized-recommendations-section">Recommended For You</a></li>
+                <li style="display: none;"><a href="#" id="userProfileLink">Profile</a></li> <!-- Profile link in profile page nav -->
+                <li style="display: none;"><a href="#" id="logoutBtn">Logout</a></li>
+            </ul>
+            <button class="mobile-menu" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-header">
+            <h2 id="profileUsername"></h2>
+            <p id="profileEmail"></p>
+        </div>
+
+        <div class="profile-section">
+            <h3>Viewed Cars</h3>
+            <div id="viewedCarsList" class="loading">
+                <div class="spinner"></div> Loading viewed cars...
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h3>Saved Cars</h3>
+            <div id="savedCarsList" class="loading">
+                <div class="spinner"></div> Loading saved cars...
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h3>Search History</h3>
+            <div id="searchHistoryList" class="loading">
+                <div class="spinner"></div> Loading search history...
+            </div>
+        </div>
+    </div>
+
+    <!-- Link main.js for authentication logic/helpers -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <!-- Additional script for profile page specific logic -->
+    <script>
+        // No specific profile.js needed, main.js will handle based on body ID
+    </script>
+</body>
+</html>
