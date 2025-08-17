@@ -74,4 +74,4 @@ This project is currently in Phase 5: Beta Launch Preparation of its development
 ________________________________________
 Contact
 Pranav Kumar Juppally - pranavkumar2605@gmail.com
-Project Link: https://github.com/[Your-Username]/AutoAggregator
+Project Link: https://github.com/pran260599/AutoAggregator
